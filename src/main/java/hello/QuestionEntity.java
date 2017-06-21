@@ -1,6 +1,11 @@
 package hello;
 
 import org.springframework.data.annotation.Id;
+
+import com.google.code.stackexchange.schema.Answer;
+
+import java.util.List;
+
 import org.bson.Document;
 
 public class QuestionEntity {
@@ -8,16 +13,10 @@ public class QuestionEntity {
 	@Id
     public String id;
 
-	public String questionId;
+	public long questionId;
     public String owner;
-    public String viewCount;
-    
-    public QuestionEntity(String questionId, String owner, String viewCount) {
-    	
-    	this.questionId =questionId;
-    	this.owner = owner;
-    	this.viewCount = viewCount;
-    }
+    public long viewCount;
+    public List<Answer> answers;
     
     public QuestionEntity() {}
     
@@ -26,6 +25,7 @@ public class QuestionEntity {
     			.append("_id", this.id)
     			.append("questionId", this.questionId)
     			.append("owner", this.owner)
-    			.append("viewCount", this.viewCount);
+    			.append("viewCount", this.viewCount)
+    			.append("Answers", answers);
     }
 }

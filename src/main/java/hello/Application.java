@@ -1,13 +1,10 @@
 package hello;
 
-import static org.mockito.Mockito.calls;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Date;
 import java.util.List;
 
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,21 +16,12 @@ import com.google.code.stackexchange.common.PagedArrayList;
 import com.google.code.stackexchange.schema.Question;
 import com.google.code.stackexchange.schema.StackExchangeSite;
 import com.google.code.stackexchange.schema.TimePeriod;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
 	@Autowired
 	private QuestionRepository repository;
-//	private MongoClient mongoClient;
-//	private MongoDatabase database;
-//	private MongoCollection<Document> collection;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -42,17 +30,6 @@ public class Application implements CommandLineRunner {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run(String... args) throws Exception {
-//		mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
-//		database = mongoClient.getDatabase("Stackoverflow");
-//		collection = database.getCollection("questions");
-		
-		
-		// save a couple of customers
-//		repository.save(new Question("question1", "Smith", "34"));
-
-		// fetch all customers
-//		System.out.println("Customers found with findAll():");
-//		System.out.println("-------------------------------");
 		StackExchangeApiClient stackexchange = new StackExchangeApiJsonClient("Iy3STd4JiwI4lMyY5GMB*Q((", StackExchangeSite.STACK_OVERFLOW);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -69,7 +46,8 @@ public class Application implements CommandLineRunner {
 			case "help":
 			case "Help":
 				print("Type either:\nget Number-Month-From Number-Day-From Number-Month-To Number-Day-To\n"
-						+ "find ");
+						+ "find "
+						+ "'exit' to end the programm.");
 				break;
 			case "get":
 			case "Get":
@@ -79,22 +57,37 @@ public class Application implements CommandLineRunner {
 				} catch (Exception e) {
 					print(e.getMessage() + "\n" + e.getStackTrace());
 				}
+				saveQuestions(questions);
 				break;
 			case "find":
 			case "Find":
 				
 				break;
 			default:
-				print("Type help or h to get instructions.");
+				print("Type 'help' or 'h' to get instructions.");
 			}
 		}
 	}
-
-	private void addQuestions(List<QuestionDocument> questions) {
-		repository.save(questions);
-//		collection.insertMany(questions);
+	
+	/**
+	 * Saves questions to the Database.
+	 * @param questions List<Question>
+	 */
+	private void saveQuestions(List<Question> questions) {
+		QuestionDocument questionDocument = new QuestionDocument();
+		for (Question question : questions) {
+			questionDocument.questionId = question.getQuestionId();
+			questionDocument.owner = question.getOwner().toString();
+			questionDocument.viewCount = question.getViewCount();
+			questionDocument.answers = question.getAnswers();
+			repository.save(questionDocument);
+		}
 	}
 	
+	/**
+	 * Console print.
+	 * @param message String
+	 */
 	private void print(String message) {
 		System.out.println(message);
 	}
