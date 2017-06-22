@@ -5,10 +5,20 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import com.google.code.stackexchange.client.StackExchangeApiClient;
 import com.google.code.stackexchange.client.impl.StackExchangeApiJsonClient;
@@ -17,20 +27,47 @@ import com.google.code.stackexchange.schema.Question;
 import com.google.code.stackexchange.schema.StackExchangeSite;
 import com.google.code.stackexchange.schema.TimePeriod;
 
-@SpringBootApplication
+@Configuration
+@ComponentScan
+@EnableAutoConfiguration
 public class Application implements CommandLineRunner {
 
 	@Autowired
 	private QuestionRepository repository;
+	private UI ui;
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		ConfigurableApplicationContext context = new SpringApplicationBuilder(UI.class).headless(false).run(args);
+		new SpringApplicationBuilder(context).headless(false).run(args);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run(String... args) throws Exception {
 		StackExchangeApiClient stackexchange = new StackExchangeApiJsonClient("Iy3STd4JiwI4lMyY5GMB*Q((", StackExchangeSite.STACK_OVERFLOW);
+		ui = new UI();
+		
+//		JFrame uiFrame = new JFrame("BigData-Stackoverflow");
+//		uiFrame.setSize(1000, 700);
+//		uiFrame.setResizable(false);
+//		
+//		JLabel labelIn = new JLabel("Input");
+//		JTextField textIn = new JTextField(1);
+//		labelIn.add(textIn);
+//		labelIn.setVisible(true);
+//		uiFrame.add(labelIn);
+//		textIn.setAlignmentX(20);
+//		textIn.setAlignmentY(20);
+//		
+//		JLabel labelOut = new JLabel("Output");
+//		JTextArea textOut = new JTextArea(10,1);
+//		labelOut.setVisible(true);
+//		labelOut.add(textOut);
+//		uiFrame.add(labelOut);
+//		textOut.setAlignmentX(80);
+//		textOut.setAlignmentY(20);
+//		
+//		uiFrame.setVisible(true);
 		
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //		String input = "";
