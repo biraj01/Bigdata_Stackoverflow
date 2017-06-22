@@ -2,7 +2,7 @@ package hello;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +32,13 @@ public class Application implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		StackExchangeApiClient stackexchange = new StackExchangeApiJsonClient("Iy3STd4JiwI4lMyY5GMB*Q((", StackExchangeSite.STACK_OVERFLOW);
 		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String input = "";
-		String[] inputparts = new String[1];
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		String input = "";
+//		String[] inputparts = new String[10];
 		List<Question> questions = new PagedArrayList<>();
-		print("Grab Data from stackoverflow.com, sign in:");
 		
-		while (!(input = reader.readLine()).equals("exit")) {
-			inputparts = input.split(" ");
-			switch (inputparts[0]) {
+		if (args.length != 0) {
+			switch (args[0]) {
 			case "h":
 			case "H":
 			case "help":
@@ -51,9 +49,10 @@ public class Application implements CommandLineRunner {
 				break;
 			case "get":
 			case "Get":
+				print("Getting data from stackoverflow.com");
 				try {
-					questions = stackexchange.getQuestions(new TimePeriod(new Date(2017, Integer.parseInt(inputparts[1]), Integer.parseInt(inputparts[2])),
-							new Date(2017, Integer.parseInt(inputparts[3]), Integer.parseInt(inputparts[4]))));
+					questions = stackexchange.getQuestions(new TimePeriod(new Date(2017, Integer.parseInt(args[1]), Integer.parseInt(args[2])),
+							new Date(2017, Integer.parseInt(args[3]), Integer.parseInt(args[4]))));
 				} catch (Exception e) {
 					print(e.getMessage() + "\n" + e.getStackTrace());
 				}
@@ -61,12 +60,24 @@ public class Application implements CommandLineRunner {
 				break;
 			case "find":
 			case "Find":
-				
+				print("Searching for data...");
 				break;
 			default:
 				print("Type 'help' or 'h' to get instructions.");
 			}
 		}
+		
+		
+//		while (true) {
+//			input = reader.readLine();
+//			if (input != null && !input.isEmpty()) {
+//				inputparts = input.split(" ");
+//				
+//			}
+//			if (input != null && input.equals("exit")) {
+//				break;
+//			}
+//		}
 	}
 	
 	/**
