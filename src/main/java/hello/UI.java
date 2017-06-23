@@ -9,8 +9,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SpringLayout;
 
-import org.springframework.core.io.support.SpringFactoriesLoader;
-
 public class UI {
 
 	private JFrame frame;
@@ -70,6 +68,7 @@ public class UI {
 		inputField.setBounds(283, 13, 116, 22);
 		inputField.setToolTipText("Type commands, then enter");
 		inputField.setEditable(true);
+		inputField.setFocusable(true);
 		frame.getContentPane().add(inputField);
 		inputField.setColumns(10);
 		//Adjust constraints for the text field so it's at
@@ -105,5 +104,10 @@ public class UI {
 		
 		frame.pack();
 		frame.setVisible(true);
+	}
+	
+	public void setOutputText(String text) {
+		outputTextPane.setText(text);
+		frame.pack();
 	}
 }
